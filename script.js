@@ -87,11 +87,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updatePhaseOptions() {
         const selectedScenario = scenarioSelect.value;
-        
+
         if (selectedScenario === 'production' || selectedScenario === 'commercial') {
             phase1Option.style.display = 'none';
             phase3Option.style.display = 'block';
-            
+
             if (gridConnectionSelect.value === '1phase') {
                 gridConnectionSelect.value = '3phase';
                 updateBatteryOptions();
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function displayResults(r) {
         const resultDiv = document.getElementById('resultDiv');
-        
+
         const htmlContent = `
             <div class="result-item">
                 <div class="result-label">Công suất hệ thống tối ưu</div>
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Nhận báo giá chi tiết
             </button>
         `;
-        
+
         resultDiv.innerHTML = htmlContent;
     }
 
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             const name = document.getElementById('customerName').value.trim();
             const phone = document.getElementById('customerPhone').value.trim();
-            
+
             const payload = new URLSearchParams();
             payload.append('entry.540432097', name);
             payload.append('entry.1201314922', phone);
@@ -297,15 +297,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: payload.toString()
             })
-            .then(() => {
-                showSuccessMessage(name, phone);
-                quoteForm.reset();
-                quotePopup.classList.remove('show');
-            })
-            .catch(err => {
-                alert('Có lỗi xảy ra, vui lòng thử lại!');
-                console.error(err);
-            });
+                .then(() => {
+                    showSuccessMessage(name, phone);
+                    quoteForm.reset();
+                    quotePopup.classList.remove('show');
+                })
+                .catch(err => {
+                    alert('Có lỗi xảy ra, vui lòng thử lại!');
+                    console.error(err);
+                });
         });
     }
 
@@ -358,17 +358,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const dropdown = document.getElementById('provinceDropdown');
     let activeIndex = -1;
 
-    provinceInput.addEventListener('input', function() {
+    provinceInput.addEventListener('input', function () {
         const rawValue = this.value.trim().toLowerCase();
         const valueNoSign = rawValue.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
         let filtered = provinces.filter(p =>
+            p.toLowerCase().startsWith(rawValue) ||
             p.toLowerCase().split(' ').some(word => word.startsWith(rawValue))
         );
 
         const filteredNoSign = provinces.filter(p =>
+            p.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').startsWith(valueNoSign) ||
             p.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(' ')
-             .some(word => word.startsWith(valueNoSign))
+                .some(word => word.startsWith(valueNoSign))
         );
 
         filtered = [...new Set([...filtered, ...filteredNoSign])];
@@ -382,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    provinceInput.addEventListener('focus', function() {
+    provinceInput.addEventListener('focus', function () {
         const rawValue = this.value.trim().toLowerCase();
         const valueNoSign = rawValue.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
@@ -392,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const filteredNoSign = provinces.filter(p =>
             p.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(' ')
-             .some(word => word.startsWith(valueNoSign))
+                .some(word => word.startsWith(valueNoSign))
         );
 
         filtered = [...new Set([...filtered, ...filteredNoSign])];
@@ -404,18 +406,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    provinceInput.addEventListener('blur', function() {
+    provinceInput.addEventListener('blur', function () {
         setTimeout(() => { dropdown.style.display = 'none'; }, 150);
     });
 
-    dropdown.addEventListener('mousedown', function(e) {
+    dropdown.addEventListener('mousedown', function (e) {
         if (e.target.tagName === 'LI') {
             provinceInput.value = e.target.textContent;
             dropdown.style.display = 'none';
         }
     });
 
-    provinceInput.addEventListener('keydown', function(e) {
+    provinceInput.addEventListener('keydown', function (e) {
         const items = dropdown.querySelectorAll('li');
         if (!items.length) return;
         if (e.key === 'ArrowDown') {
@@ -461,7 +463,7 @@ function closePopup(popupId) {
     document.getElementById(popupId).classList.remove('show');
 }
 
-function showSuccessMessage(name, phone) {
+function showSuccessMessage() {
     const successPopup = document.createElement('div');
     successPopup.className = 'success-notification';
     successPopup.innerHTML = `
